@@ -75,6 +75,42 @@ namespace EarthLiveSharp.Tests
                 Environment.SetEnvironmentVariable("XDG_CONFIG_HOME", null);
             }
         }
+
+        [Fact]
+        public void Config_SaveAndLoad_UsesExplicitConfigPathOverride()
+        {
+            string tmpDir = Path.Combine(Path.GetTempPath(), $"els_test_{Guid.NewGuid():N}");
+            Directory.CreateDirectory(tmpDir);
+            string configPath = Path.Combine(tmpDir, "custom-config.json");
+
+            try
+            {
+                Environment.SetEnvironmentVariable("EARTHLIVESHARP_CONFIG_PATH", configPath);
+
+                var original = new Config { Satellite = "NasaEpic", IntervalMinutes = 5 };
+                original.Save();
+
+                Assert.True(File.Exists(configPath));
+                var loaded = Config.Load();
+                Assert.Equal("NasaEpic", loaded.Satellite);
+                Assert.Equal(5, loaded.IntervalMinutes);
+            }
+            finally
+            {
+                Environment.SetEnvironmentVariable("EARTHLIVESHARP_CONFIG_PATH", null);
+                try
+                {
+                    if (Directory.Exists(tmpDir))
+                    {
+                        Directory.Delete(tmpDir, recursive: true);
+                    }
+                }
+                catch
+                {
+                    // best-effort cleanup
+                }
+            }
+        }
     }
 
     public class EpicSourceTests
