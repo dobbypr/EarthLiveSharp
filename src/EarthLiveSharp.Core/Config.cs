@@ -70,6 +70,14 @@ namespace EarthLiveSharp.Core
         /// <summary>Returns the canonical config file path (XDG Base Directory).</summary>
         public static string GetConfigPath()
         {
+            string? explicitConfigPath = Environment.GetEnvironmentVariable("EARTHLIVESHARP_CONFIG_PATH");
+            if (!string.IsNullOrWhiteSpace(explicitConfigPath))
+            {
+                return explicitConfigPath.EndsWith(".json", StringComparison.OrdinalIgnoreCase)
+                    ? Path.GetFullPath(explicitConfigPath)
+                    : Path.Combine(Path.GetFullPath(explicitConfigPath), "earthlivesharp", "config.json");
+            }
+
             string configHome = Environment.GetEnvironmentVariable("XDG_CONFIG_HOME")
                 ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".config");
             return Path.Combine(configHome, "earthlivesharp", "config.json");

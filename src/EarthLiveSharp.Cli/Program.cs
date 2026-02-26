@@ -43,8 +43,8 @@ namespace EarthLiveSharp.Cli
             // Handle --config <path> argument
             if (args.Length > 1 && args[0] == "--config")
             {
-                Environment.SetEnvironmentVariable("XDG_CONFIG_HOME",
-                    Path.GetDirectoryName(args[1]));
+                Environment.SetEnvironmentVariable("EARTHLIVESHARP_CONFIG_PATH",
+                    Path.GetFullPath(args[1]));
             }
 
             // Load (or create) configuration
