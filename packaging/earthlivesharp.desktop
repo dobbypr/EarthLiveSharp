@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=EarthLiveSharp
+Exec=/usr/local/bin/earthlivesharp
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Comment=Live satellite imagery wallpaper daemon

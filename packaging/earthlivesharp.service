@@ -1,0 +1,15 @@
+[Unit]
+Description=EarthLiveSharp — live satellite imagery wallpaper daemon
+After=network-online.target graphical-session.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/earthlivesharp
+Restart=on-failure
+RestartSec=60
+Environment=DISPLAY=:0
+Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/%U/bus
+
+[Install]
+WantedBy=default.target

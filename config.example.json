@@ -1,0 +1,12 @@
+{
+  "version": "v4.0",
+  "satellite": "Himawari9",
+  "intervalMinutes": 20,
+  "autostart": false,
+  "setWallpaper": true,
+  "size": 1,
+  "zoom": 100,
+  "saveTexture": false,
+  "saveDirectory": "",
+  "saveMaxCount": 10
+}

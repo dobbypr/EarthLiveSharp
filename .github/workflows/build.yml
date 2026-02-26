@@ -1,0 +1,67 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ master, main, "copilot/**" ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  build-and-test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore
+        run: dotnet restore EarthLiveSharp.sln
+
+      - name: Build
+        run: dotnet build EarthLiveSharp.sln --no-restore --configuration Release
+
+      - name: Test
+        run: dotnet test EarthLiveSharp.sln --no-build --configuration Release --logger "trx;LogFileName=test-results.trx"
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results-${{ matrix.os }}
+          path: "**/*.trx"
+
+  publish-linux:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Publish self-contained Linux x64
+        run: |
+          dotnet publish src/EarthLiveSharp.Cli/EarthLiveSharp.Cli.csproj \
+            -r linux-x64 \
+            --self-contained \
+            -c Release \
+            -o publish/linux-x64
+
+      - name: Upload Linux binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: earthlivesharp-linux-x64
+          path: publish/linux-x64/
