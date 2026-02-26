@@ -98,7 +98,17 @@ namespace EarthLiveSharp.Tests
             finally
             {
                 Environment.SetEnvironmentVariable("EARTHLIVESHARP_CONFIG_PATH", null);
-                Directory.Delete(tmpDir, recursive: true);
+                try
+                {
+                    if (Directory.Exists(tmpDir))
+                    {
+                        Directory.Delete(tmpDir, recursive: true);
+                    }
+                }
+                catch
+                {
+                    // best-effort cleanup
+                }
             }
         }
     }

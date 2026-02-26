@@ -73,9 +73,7 @@ namespace EarthLiveSharp.Core
             string? explicitConfigPath = Environment.GetEnvironmentVariable("EARTHLIVESHARP_CONFIG_PATH");
             if (!string.IsNullOrWhiteSpace(explicitConfigPath))
             {
-                return explicitConfigPath.EndsWith(".json", StringComparison.OrdinalIgnoreCase)
-                    ? Path.GetFullPath(explicitConfigPath)
-                    : Path.Combine(Path.GetFullPath(explicitConfigPath), "earthlivesharp", "config.json");
+                return Path.GetFullPath(explicitConfigPath);
             }
 
             string configHome = Environment.GetEnvironmentVariable("XDG_CONFIG_HOME")
